@@ -1,40 +1,27 @@
-# Build stage
+# Simple Dockerfile for WAF API - Build from root
 FROM golang:1.25-alpine AS builder
-
-WORKDIR /build
-
-# Install build dependencies
-RUN apk add --no-cache git ca-certificates
-
-# Copy go mod files from parent directory
-COPY ../go.mod ../go.sum ./
-RUN go mod download
-
-# Copy source code
-COPY ../ ./
-
-# Build WAF API Server
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o /waf-api ./cmd/api
-
-# Runtime stage
-FROM alpine:3.19
 
 WORKDIR /app
 
-# Install runtime dependencies
+# Install dependencies
+RUN apk add --no-cache git ca-certificates
+
+# Copy module files
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy all source code
+COPY . .
+
+# Build
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o /waf-api ./cmd/api
+
+# Runtime
+FROM alpine:3.19
+WORKDIR /app
 RUN apk add --no-cache ca-certificates tzdata
-
-# Copy binary from builder
 COPY --from=builder /waf-api /app/waf-api
-
-# Create directories for data
 RUN mkdir -p /app/data /app/logs
-
-# Set timezone
 ENV TZ=UTC
-
-# Expose API port
 EXPOSE 3001
-
-# Run WAF API Server
 ENTRYPOINT ["/app/waf-api"]
