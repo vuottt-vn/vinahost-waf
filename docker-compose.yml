@@ -36,10 +36,10 @@ services:
     container_name: waf-api
     restart: unless-stopped
     ports:
-      - "${API_PORT:-3001}:3001"
+      - "${API_PORT:-3000}:3000"
     environment:
       - DB_PATH=/app/data/waf.db
-      - API_PORT=3001
+      - API_PORT=3000
       - JWT_SECRET=${JWT_SECRET:-change-this-in-production}
     volumes:
       - waf-data:/app/data
