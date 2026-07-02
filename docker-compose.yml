@@ -36,14 +36,30 @@ services:
     container_name: waf-api
     restart: unless-stopped
     ports:
-      - "${API_PORT:-3000}:3000"
+      - "${API_PORT:-3001}:3001"
     environment:
       - DB_PATH=/app/data/waf.db
-      - API_PORT=3000
+      - API_PORT=3001
       - JWT_SECRET=${JWT_SECRET:-change-this-in-production}
     volumes:
       - waf-data:/app/data
       - waf-logs:/app/logs
+    networks:
+      - waf-network
+
+  # Web Frontend - React Dashboard
+  waf-frontend:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=/api
+    container_name: waf-frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    depends_on:
+      - waf-api
     networks:
       - waf-network
 
