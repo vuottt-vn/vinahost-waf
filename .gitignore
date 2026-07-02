@@ -1,0 +1,55 @@
+# Binaries
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Go build artifacts
+/bin
+*.test
+*.prof
+
+# Database files
+*.db
+*.db-journal
+*.db-wal
+
+# Environment files (contains secrets)
+.env
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Node modules (for frontend)
+web/node_modules/
+web/dist/
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Docker (keep Dockerfiles, ignore compose overrides)
+docker-compose.override.yml
+
+# Test coverage
+coverage.out
+coverage.html
+
+# OWASP CRS (will be downloaded during build)
+configs/crs/

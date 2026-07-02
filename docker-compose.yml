@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  waf-proxy:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.waf
+    container_name: waf-proxy
+    restart: unless-stopped
+    ports:
+      - "${PROXY_PORT:-8080}:8080"
+    environment:
+      - DB_PATH=/app/data/waf.db
+      - PROXY_PORT=8080
+      - JWT_SECRET=${JWT_SECRET:-change-this-in-production}
+      - WAF_MODE=${WAF_MODE:-on}
+      - WAF_CRS_ENABLED=${WAF_CRS_ENABLED:-false}
+      - RATE_LIMIT_ENABLED=${RATE_LIMIT_ENABLED:-true}
+      - RATE_LIMIT_MAX_REQUESTS=${RATE_LIMIT_MAX_REQUESTS:-100}
+      - RATE_LIMIT_WINDOW_SECONDS=${RATE_LIMIT_WINDOW_SECONDS:-60}
+    volumes:
+      - waf-data:/app/data
+      - waf-logs:/app/logs
+    networks:
+      - waf-network
+
+  waf-api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    container_name: waf-api
+    restart: unless-stopped
+    ports:
+      - "${API_PORT:-3001}:3001"
+    environment:
+      - DB_PATH=/app/data/waf.db
+      - API_PORT=3001
+      - JWT_SECRET=${JWT_SECRET:-change-this-in-production}
+    volumes:
+      - waf-data:/app/data
+      - waf-logs:/app/logs
+    networks:
+      - waf-network
+
+volumes:
+  waf-data:
+  waf-logs:
+
+networks:
+  waf-network:
+    driver: bridge

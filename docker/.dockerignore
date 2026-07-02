@@ -1,0 +1,34 @@
+# Git
+.git
+.gitignore
+
+# Docker
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.exe
+*.dll
+*.so
+
+# Documentation
+*.md
+LICENSE
+
+# Scripts
+scripts/
+run-waf.ps1
+
+# Tests
+*_test.go
