@@ -3,8 +3,8 @@ version: '3.8'
 services:
   waf-proxy:
     build:
-      context: .  # MUST be root directory where go.mod exists
-      dockerfile: docker/Dockerfile.waf
+      context: .
+      dockerfile: Dockerfile.waf
     container_name: waf-proxy
     restart: unless-stopped
     ports:
@@ -31,8 +31,8 @@ services:
 
   waf-api:
     build:
-      context: .  # MUST be root directory where go.mod exists
-      dockerfile: docker/Dockerfile.api
+      context: .
+      dockerfile: Dockerfile.api
     container_name: waf-api
     restart: unless-stopped
     ports:
